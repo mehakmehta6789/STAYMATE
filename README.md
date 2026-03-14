@@ -64,21 +64,21 @@ The platform supports **two main user roles**:
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/mehakmehta6789/ProHealth.git
-cd ProHealth
+git clone https://github.com/mehakmehta6789/STAYMATE.git
+
 ```
-### 2.Navigate into the project folder
+#### 2. Navigate into the project folder
 ```bash
 cd staymate
 
 ```
-### 3. Install Dependencies
+#### 3. Install Dependencies
 ```bash
 npm install
 
 ```
 
-### 4. Create a .env file
+#### 4. Create a .env file
 ```bash
 PORT=3000
 MONGO_URI=your_mongodb_connection
@@ -86,7 +86,7 @@ SESSION_SECRET=your_secret_key
 
 ```
 
-### 5. Run the Application
+#### 5. Run the Application
 ```bash
 npm start
 ```
