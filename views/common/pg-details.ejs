@@ -1,0 +1,234 @@
+<% pageCSS = 'pg-details.css' %>
+
+<section class="container mt-4">
+  <div class="details-topbar">
+    <h2><%= pg.title %></h2>
+    <p><%= [pg.city, pg.area].filter(Boolean).join(', ') || pg.location %></p>
+  </div>
+
+  <div class="pg-header">
+    <!-- Images -->
+    <div class="pg-gallery">
+      <% if (pg.images && pg.images.length > 0) { %>
+        <% pg.images.forEach(img => { %>
+          <% const normalized = typeof img === 'string' ? img.replace(/^\/+/, '') : ''; %>
+          <% const src = normalized.includes('/') ? `/${normalized}` : `/images/${normalized}`; %>
+          <img src="<%= src %>" alt="PG Image" />
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state">No images uploaded yet.</div>
+      <% } %>
+    </div>
+
+    <!-- Main Info -->
+    <div class="pg-sidebar-card">
+      <h3 class="rent-value">₹<%= pg.rent %> / month</h3>
+
+      <% if (pg.rentBreakdown) { %>
+        <p><strong>Rent Breakdown:</strong> <%= pg.rentBreakdown %></p>
+      <% } %>
+
+      <div class="quick-meta">
+        <p>Room Type: <strong><%= pg.roomType %></strong></p>
+        <p>Gender Preference: <strong><%= pg.genderPreference %></strong></p>
+      </div>
+
+      <p>
+        Status:
+        <span class="status-badge <%= pg.availability ? 'status-approved' : 'status-rejected' %>">
+          <%= pg.availability ? 'Available' : 'Not Available' %>
+        </span>
+      </p>
+
+      <p>Total Beds: <strong><%= pg.totalBeds || 1 %></strong></p>
+      <p>Available Beds: <strong><%= pg.availableBeds ?? (pg.availability ? 1 : 0) %></strong></p>
+
+      <% if (canViewOwnerContact && pg.ownerContact) { %>
+        <p>Owner Contact: <strong><%= pg.ownerContact %></strong></p>
+      <% } %>
+
+      <div class="sidebar-actions">
+        <a href="/chat/with/<%= pg.owner?._id || pg.owner %>" class="btn btn-primary">
+          Chat with Owner
+        </a>
+
+        <a href="/roommate" class="btn btn-secondary">
+          Find Roommates Here
+        </a>
+      </div>
+
+      <% if (canRequestToJoin) { %>
+        <form action="/requests/create" method="POST" class="join-form">
+          <input type="hidden" name="pgId" value="<%= pg._id %>" />
+          <input type="hidden" name="type" value="stay" />
+          <button type="submit" class="btn btn-secondary">Request to Join</button>
+        </form>
+      <% } else if (user && user.role === 'student' && isApprovedStudent) { %>
+        <p class="join-status"><span class="status-badge status-approved">Approved</span></p>
+      <% } else if (user && user.role === 'student' && (pg.availableBeds ?? 0) <= 0) { %>
+        <p class="join-status"><span class="status-badge status-rejected">No beds available</span></p>
+      <% } %>
+    </div>
+  </div>
+
+  <% if (pg.fullAddress) { %>
+    <section class="detail-section mt-4">
+      <h3>Full Address</h3>
+      <p><%= pg.fullAddress %></p>
+    </section>
+  <% } %>
+
+  <% if (pg.mapEmbedUrl) { %>
+    <section class="detail-section mt-4">
+      <h3>Google Maps</h3>
+      <iframe
+        src="<%= pg.mapEmbedUrl %>"
+        width="100%"
+        height="280"
+        style="border:0;"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </section>
+  <% } %>
+
+  <!-- Facilities -->
+  <section class="detail-section mt-4">
+    <h3>Facilities</h3>
+    <div class="amenity-grid">
+      <% if (pg.facilities && pg.facilities.length > 0) { %>
+        <% pg.facilities.forEach(f => { %>
+          <span class="facility"><%= f %></span>
+        <% }) %>
+      <% } else { %>
+        <p>No facilities listed.</p>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Rules -->
+  <section class="detail-section mt-4">
+    <h3>Rules</h3>
+    <p><%= pg.rules || 'No specific rules mentioned.' %></p>
+  </section>
+
+  <!-- Approved Students -->
+  <section class="detail-section mt-4">
+    <h3>Approved Students</h3>
+
+    <% if (residents && residents.length > 0) { %>
+      <div class="resident-list">
+      <% residents.forEach(r => { %>
+        <div class="card mb-2 resident-card">
+          <div class="card-body">
+            <strong><%= r.name || 'Student' %></strong>
+
+            <% if (user && user.role === 'student' && r._id.toString() !== user._id.toString()) { %>
+              <div class="resident-actions">
+                <a href="/roommate/compatibility/<%= r._id %>" class="btn btn-outline-secondary">
+                  View Compatibility
+                </a>
+                <a href="/chat/with/<%= r._id %>" class="btn btn-primary">
+                  Chat
+                </a>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+      </div>
+    <% } else { %>
+      <p>No residents added yet.</p>
+    <% } %>
+  </section>
+
+  <!-- Reviews -->
+  <section class="detail-section mt-4">
+    <h3>Reviews</h3>
+
+    <% if (user && user.role === 'student') { %>
+      <form action="/review/add/<%= pg._id %>" method="POST" class="review-form">
+        <p class="review-form-title">Give your rating</p>
+
+        <div class="star-rating" role="radiogroup" aria-label="Rate this PG">
+          <input type="radio" id="star5" name="rating" value="5" required />
+          <label for="star5" title="5 stars">★</label>
+
+          <input type="radio" id="star4" name="rating" value="4" />
+          <label for="star4" title="4 stars">★</label>
+
+          <input type="radio" id="star3" name="rating" value="3" />
+          <label for="star3" title="3 stars">★</label>
+
+          <input type="radio" id="star2" name="rating" value="2" />
+          <label for="star2" title="2 stars">★</label>
+
+          <input type="radio" id="star1" name="rating" value="1" />
+          <label for="star1" title="1 star">★</label>
+        </div>
+
+        <div class="review-meta-grid">
+          <div>
+            <label>Food Quality</label>
+            <select name="foodQuality">
+              <option value="">Not rated</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Cleanliness</label>
+            <select name="cleanliness">
+              <option value="">Not rated</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Safety</label>
+            <select name="safety">
+              <option value="">Not rated</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+        </div>
+
+        <textarea name="comment" rows="3" placeholder="Share your experience..." required></textarea>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+      </form>
+    <% } %>
+
+    <% if (reviews && reviews.length > 0) { %>
+      <div class="review-list">
+      <% reviews.forEach(r => { %>
+        <div class="card mb-2 review-card">
+          <div class="card-body">
+            <strong><%= r.user.name %></strong>
+            <p class="review-stars">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <span class="star <%= i <= r.rating ? 'filled' : '' %>">★</span>
+              <% } %>
+              <span class="review-score"><%= r.rating %>/5</span>
+            </p>
+            <p><%= r.comment %></p>
+          </div>
+        </div>
+      <% }) %>
+      </div>
+    <% } else { %>
+      <p>No reviews yet.</p>
+    <% } %>
+  </section>
+</section>

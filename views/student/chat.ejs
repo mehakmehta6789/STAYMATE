@@ -1,0 +1,42 @@
+<%  { pageCSS: 'chat.css' } %>
+
+<div class="container mt-4 chat-box">
+  <div class="chat-users">
+    <p><strong>Conversations</strong></p>
+
+    <% if (contacts && contacts.length > 0) { %>
+      <% contacts.forEach(c => { %>
+        <a
+          href="/chat/with/<%= c._id %>"
+          class="chat-user <%= receiverId && receiverId.toString() === c._id.toString() ? 'active' : '' %>"
+        >
+          <%= c.name %>
+          <span style="opacity:0.7; font-size:12px;">(<%= c.role %>)</span>
+        </a>
+      <% }) %>
+    <% } else { %>
+      <p style="opacity:0.8;">No chats yet. Start from PG details, roommate listings, or student requests.</p>
+    <% } %>
+  </div>
+
+  <div class="chat-messages">
+    <div id="messages"></div>
+
+    <form
+      id="chatForm"
+      data-conversation="<%= conversationId %>"
+      data-receiver="<%= receiverId %>"
+      data-current-user="<%= currentUserId %>"
+    >
+      <input
+        type="text"
+        id="messageInput"
+        placeholder="Type your message..."
+        required
+      />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/chat.js"></script>

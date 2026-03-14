@@ -1,0 +1,117 @@
+<% pageCSS = 'home.css' %>
+
+<div class="home-page">
+  <section class="hero-shell">
+    <section class="hero" data-hero-carousel>
+      <div class="hero-slides" aria-hidden="true">
+        <div class="hero-slide hero-slide-1 is-active" data-hero-slide></div>
+        <div class="hero-slide hero-slide-2" data-hero-slide></div>
+        <div class="hero-slide hero-slide-3" data-hero-slide></div>
+      </div>
+
+      <div class="hero-overlay"></div>
+
+      <div class="container hero-content">
+        <p class="eyebrow">Verified Student Living</p>
+        <h1>Find Your Perfect PG & Roommate</h1>
+        <p>Safe, verified, and student-friendly stays.</p>
+
+        <div class="hero-search-panel" aria-label="Quick actions">
+          <a href="/pgs" class="btn btn-primary">Explore PG Listings</a>
+          <a href="/roommate" class="btn btn-secondary">Explore Roommate Listings</a>
+        </div>
+      </div>
+
+      <button type="button" class="hero-control hero-prev" data-hero-prev aria-label="Previous background">
+        &#10094;
+      </button>
+      <button type="button" class="hero-control hero-next" data-hero-next aria-label="Next background">
+        &#10095;
+      </button>
+
+      <div class="hero-dots" role="tablist" aria-label="Hero background selector">
+        <button type="button" class="hero-dot is-active" data-hero-dot="0" aria-label="Show background 1"></button>
+        <button type="button" class="hero-dot" data-hero-dot="1" aria-label="Show background 2"></button>
+        <button type="button" class="hero-dot" data-hero-dot="2" aria-label="Show background 3"></button>
+      </div>
+    </section>
+  </section>
+
+  <section class="section-dark">
+    <div class="container">
+      <p class="section-kicker">Property by Requirement</p>
+      <h2>Explore Stay Types</h2>
+      <div class="type-grid">
+        <article class="type-card" aria-label="Single Sharing PG">
+          <h3>Single Sharing PG</h3>
+          <p>Quiet spaces and privacy-first rooms.</p>
+        </article>
+        <article class="type-card" aria-label="Double Sharing PG">
+          <h3>Double Sharing PG</h3>
+          <p>Affordable and social accommodation picks.</p>
+        </article>
+        <article class="type-card" aria-label="Food Included">
+          <h3>Food Included</h3>
+          <p>Move-in-ready stays with meal options.</p>
+        </article>
+        <article class="type-card" aria-label="Roommate Match">
+          <h3>Roommate Match</h3>
+          <p>Find compatible roommates faster.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-listings container">
+    <div class="section-header">
+      <div>
+        <p class="section-kicker light">Our Listings</p>
+        <h2>Find Home Listing In Your Area</h2>
+      </div>
+      <a href="/pgs" class="btn btn-outline">View All</a>
+    </div>
+
+    <div class="listing-grid">
+      <% if (homePgs && homePgs.length > 0) { %>
+        <% homePgs.forEach(pg => { %>
+          <% const firstImg = pg.images && pg.images.length > 0 ? pg.images[0] : ''; %>
+          <% const normalized = typeof firstImg === 'string' ? firstImg.replace(/^\/+/, '') : ''; %>
+          <% const imageSrc = normalized ? (normalized.includes('/') ? `/${normalized}` : `/images/${normalized}`) : '/images/g1.jpg'; %>
+          <article class="listing-card">
+            <img src="<%= imageSrc %>" alt="<%= pg.title %>" loading="lazy" />
+            <div class="listing-copy">
+              <h3><%= pg.title %></h3>
+              <p><%= pg.location %> • ₹<%= pg.rent %>/month</p>
+              <a href="/pg/<%= pg._id %>" class="card-link">Check Details</a>
+            </div>
+          </article>
+        <% }) %>
+      <% } else { %>
+        <article class="listing-card">
+          <img src="/images/g1.jpg" alt="PG exterior view" loading="lazy" />
+          <div class="listing-copy">
+            <h3>No Listings Yet</h3>
+            <p>New PG listings will appear here once owners add and publish them.</p>
+            <a href="/pgs" class="card-link">View All</a>
+          </div>
+        </article>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="section-dark location-band">
+    <div class="container">
+      <p class="section-kicker">Our Property List</p>
+      <h2>Top Locations For You</h2>
+      <div class="location-strip" aria-hidden="true">
+        <img src="/images/g4.jpg" alt="" loading="lazy" />
+        <img src="/images/g5.jpg" alt="" loading="lazy" />
+        <img src="/images/g6.jpg" alt="" loading="lazy" />
+        <img src="/images/g2.jpg" alt="" loading="lazy" />
+        <img src="/images/g3.jpg" alt="" loading="lazy" />
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="/js/home-hero-carousel.js"></script>

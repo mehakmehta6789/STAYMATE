@@ -1,0 +1,64 @@
+<section class="container mt-4">
+  <h2>Roommate Requests</h2>
+
+  <div class="pg-grid" style="margin-top: 16px;">
+    <div class="card">
+      <div class="card-body">
+        <h4>Incoming Requests</h4>
+        <% if (incomingRequests && incomingRequests.length > 0) { %>
+          <% incomingRequests.forEach(request => { %>
+            <div style="margin-top:10px; padding:10px; border:1px solid #e2e8f0; border-radius:12px;">
+              <p><strong><%= request.requester?.name || 'Student' %></strong> (<%= request.requester?.email || '' %>)</p>
+              <p>Budget Share: ₹<%= request.post?.rentShare || '-' %></p>
+              <p>Location: <%= request.post?.preferredLocation || request.post?.preferredArea || 'N/A' %></p>
+              <p>
+                Status:
+                <span class="status-badge <%= request.status === 'accepted' ? 'status-approved' : request.status === 'rejected' ? 'status-rejected' : 'status-pending' %>">
+                  <%= request.status %>
+                </span>
+              </p>
+
+              <% if (request.status === 'pending') { %>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <form action="/roommate/request/status/<%= request._id %>" method="POST">
+                    <input type="hidden" name="status" value="accepted" />
+                    <button class="btn btn-secondary btn-sm" type="submit">Accept</button>
+                  </form>
+                  <form action="/roommate/request/status/<%= request._id %>" method="POST">
+                    <input type="hidden" name="status" value="rejected" />
+                    <button class="btn btn-danger btn-sm" type="submit">Reject</button>
+                  </form>
+                </div>
+              <% } %>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p>No incoming requests.</p>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h4>Outgoing Requests</h4>
+        <% if (outgoingRequests && outgoingRequests.length > 0) { %>
+          <% outgoingRequests.forEach(request => { %>
+            <div style="margin-top:10px; padding:10px; border:1px solid #e2e8f0; border-radius:12px;">
+              <p>To <strong><%= request.recipient?.name || 'Student' %></strong> (<%= request.recipient?.email || '' %>)</p>
+              <p>Budget Share: ₹<%= request.post?.rentShare || '-' %></p>
+              <p>Location: <%= request.post?.preferredLocation || request.post?.preferredArea || 'N/A' %></p>
+              <p>
+                Status:
+                <span class="status-badge <%= request.status === 'accepted' ? 'status-approved' : request.status === 'rejected' ? 'status-rejected' : 'status-pending' %>">
+                  <%= request.status %>
+                </span>
+              </p>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p>No outgoing requests.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>

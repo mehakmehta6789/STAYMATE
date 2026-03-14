@@ -1,0 +1,96 @@
+
+<% pageCSS = 'student-profile.css' %>
+
+<section class="container profile-page mt-4">
+  <h2 class="profile-title">Student Profile</h2>
+
+  <form action="/student/profile" method="POST" enctype="multipart/form-data" class="profile-shell">
+    <aside class="profile-side">
+      <div class="avatar-wrap">
+        <% if (profile?.profileImage) { %>
+          <img src="<%= profile.profileImage %>" alt="Student profile image" class="avatar-img" />
+        <% } else { %>
+          <div class="avatar-fallback"><%= (account?.name || 'S').charAt(0).toUpperCase() %></div>
+        <% } %>
+      </div>
+      <h3><%= account?.name || 'Student' %></h3>
+      <p><%= account?.email || '' %></p>
+
+      <label class="upload-label" for="profileImage">Change Photo</label>
+      <input id="profileImage" name="profileImage" type="file" accept="image/*" />
+    </aside>
+
+    <div class="profile-main">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>College Name</label>
+          <input type="text" name="collegeName" value="<%= profile?.collegeName || '' %>" required />
+        </div>
+
+        <div class="form-group">
+          <label>Course</label>
+          <input type="text" name="course" value="<%= profile?.course || '' %>" />
+        </div>
+
+        <div class="form-group">
+          <label>Year</label>
+          <input type="text" name="year" value="<%= profile?.year || '' %>" />
+        </div>
+
+        <div class="form-group">
+          <label>Budget Min</label>
+          <input type="number" name="budgetMin" placeholder="Min" value="<%= profile?.budgetMin || '' %>" />
+        </div>
+
+        <div class="form-group">
+          <label>Budget Max</label>
+          <input type="number" name="budgetMax" placeholder="Max" value="<%= profile?.budgetMax || '' %>" />
+        </div>
+
+        <div class="form-group">
+          <label>Food Preference</label>
+          <select name="foodPreference">
+            <option value="veg" <%= profile?.foodPreference === 'veg' ? 'selected' : '' %>>Veg</option>
+            <option value="non-veg" <%= profile?.foodPreference === 'non-veg' ? 'selected' : '' %>>Non-Veg</option>
+            <option value="both" <%= profile?.foodPreference === 'both' ? 'selected' : '' %>>Both</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Lifestyle</label>
+          <select name="lifestyle">
+            <option value="quiet" <%= profile?.lifestyle === 'quiet' ? 'selected' : '' %>>Quiet</option>
+            <option value="social" <%= profile?.lifestyle === 'social' ? 'selected' : '' %>>Social</option>
+            <option value="night-owl" <%= profile?.lifestyle === 'night-owl' ? 'selected' : '' %>>Night Owl</option>
+          </select>
+        </div>
+
+        <div class="form-group check-row">
+          <label><input type="checkbox" name="smoking" <%= profile?.habits?.smoking ? 'checked' : '' %> /> Smoking</label>
+          <label><input type="checkbox" name="drinking" <%= profile?.habits?.drinking ? 'checked' : '' %> /> Drinking</label>
+        </div>
+
+        <div class="form-group">
+          <label>Cleanliness</label>
+          <select name="cleanliness">
+            <option value="low" <%= profile?.habits?.cleanliness === 'low' ? 'selected' : '' %>>Low</option>
+            <option value="medium" <%= profile?.habits?.cleanliness === 'medium' ? 'selected' : '' %>>Medium</option>
+            <option value="high" <%= profile?.habits?.cleanliness === 'high' ? 'selected' : '' %>>High</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Sleep Time</label>
+          <select name="sleepTime">
+            <option value="early" <%= profile?.habits?.sleepTime === 'early' ? 'selected' : '' %>>Early</option>
+            <option value="late" <%= profile?.habits?.sleepTime === 'late' ? 'selected' : '' %>>Late</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </form>
+</section>

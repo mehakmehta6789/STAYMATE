@@ -1,0 +1,26 @@
+<div class="container mt-4">
+  <h2>My Requests</h2>
+
+  <% if (!requests || requests.length === 0) { %>
+    <p>You haven’t sent any PG requests yet.</p>
+  <% } else { %>
+    <div class="pg-grid">
+      <% requests.forEach(r => { %>
+        <div class="card">
+          <div class="card-body">
+            <h4><%= r.pg?.title || 'PG' %></h4>
+            <p><%= r.pg?.location || '' %></p>
+            <p>Status: <strong><%= r.status %></strong></p>
+            <p>Type: <%= r.type === 'roommate' ? 'Roommate' : 'Stay' %></p>
+            <% if (r.message) { %>
+              <p>Message: <%= r.message %></p>
+            <% } %>
+            <% if (r.pg?._id) { %>
+              <a href="/pg/<%= r.pg._id %>" class="btn btn-secondary">View PG</a>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>

@@ -1,0 +1,63 @@
+
+<% pageCSS = 'owner-dashboard.css' %>
+
+<section class="container owner-page mt-4">
+  <h2 class="dashboard-title">My PG Listings</h2>
+
+  <nav class="owner-nav" aria-label="Owner navigation">
+    <a href="/owner/dashboard">Dashboard</a>
+    <a class="is-active" href="/owner/my-pgs">My PGs</a>
+    <a href="/owner/add-pg">Add New PG</a>
+    <a href="/owner/enquiries">Student Requests</a>
+    <a href="/owner/reviews">Reviews</a>
+    <a href="/chat">Chat</a>
+  </nav>
+
+  <% if (pgs && pgs.length > 0) { %>
+    <div class="pg-grid owner-pg-grid">
+      <% pgs.forEach(pg => { %>
+        <div class="card owner-card">
+          <div class="card-body">
+            <h4><%= pg.title %></h4>
+            <p><%= pg.location %></p>
+            <p>₹<%= pg.rent %> / month</p>
+            <p>Total Beds: <strong><%= pg.totalBeds || 1 %></strong></p>
+            <p>Available Beds: <strong><%= pg.availableBeds ?? (pg.availability ? 1 : 0) %></strong></p>
+
+            <p>
+              Status:
+              <strong>
+                <%= pg.availability ? 'Available' : 'Not Available' %>
+              </strong>
+            </p>
+
+            <form action="/pg/update/<%= pg._id %>" method="POST" enctype="multipart/form-data" class="owner-inline-form">
+              <input type="text" name="title" value="<%= pg.title %>" required />
+              <input type="text" name="city" value="<%= pg.city || '' %>" placeholder="City" />
+              <input type="text" name="area" value="<%= pg.area || '' %>" placeholder="Area" />
+              <input type="number" name="rent" value="<%= pg.rent %>" required />
+              <input type="number" name="totalBeds" min="1" value="<%= pg.totalBeds || 1 %>" required />
+              <input type="number" name="availableBeds" min="0" value="<%= pg.availableBeds ?? (pg.availability ? 1 : 0) %>" required />
+              <input type="file" name="images" accept="image/*" multiple />
+              <button class="btn btn-primary" type="submit">Edit PG</button>
+            </form>
+
+            <div class="owner-actions">
+            <form action="/pg/availability/<%= pg._id %>" method="POST">
+              <button class="btn btn-secondary">
+                Toggle Availability
+              </button>
+            </form>
+
+            <form action="/pg/delete/<%= pg._id %>" method="POST" onsubmit="return confirm('Delete this PG?')">
+              <button class="btn btn-danger">Delete</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="empty-state">No PGs added yet.</p>
+  <% } %>
+</section>

@@ -1,0 +1,46 @@
+<% pageCSS = 'owner-profile.css' %>
+
+<section class="container profile-page mt-4">
+  <h2 class="profile-title">Admin Profile</h2>
+
+  <form action="/owner/profile" method="POST" enctype="multipart/form-data" class="profile-shell">
+    <aside class="profile-side">
+      <div class="avatar-wrap">
+        <% if (account?.profileImage) { %>
+          <img src="<%= account.profileImage %>" alt="Admin profile image" class="avatar-img" />
+        <% } else { %>
+          <div class="avatar-fallback"><%= (account?.name || 'A').charAt(0).toUpperCase() %></div>
+        <% } %>
+      </div>
+
+      <h3><%= account?.name || 'Admin' %></h3>
+      <p><%= account?.email || '' %></p>
+
+      <label class="upload-label" for="profileImage">Change Photo</label>
+      <input id="profileImage" name="profileImage" type="file" accept="image/*" />
+    </aside>
+
+    <div class="profile-main">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Full Name</label>
+          <input type="text" name="name" value="<%= account?.name || '' %>" required />
+        </div>
+
+        <div class="form-group full">
+          <label>Email</label>
+          <input type="email" value="<%= account?.email || '' %>" readonly />
+        </div>
+
+        <div class="form-group full">
+          <label>Role</label>
+          <input type="text" value="<%= account?.role || 'owner' %>" readonly />
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </form>
+</section>

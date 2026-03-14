@@ -1,0 +1,80 @@
+<% pageCSS = 'pg-list.css' %>
+
+<section class="container mt-4">
+  <h2>Available PGs</h2>
+
+  <!-- Filters -->
+  <form method="get" class="filters mb-4">
+    <input type="text" name="location" placeholder="Location" value="<%= filter?.location || '' %>" />
+    <input type="number" name="minRent" placeholder="Min Rent" value="<%= filter?.minRent || '' %>" />
+    <input type="number" name="maxRent" placeholder="Max Rent" value="<%= filter?.maxRent || '' %>" />
+    <select name="gender">
+      <option value="">Gender Preference</option>
+      <option value="any" <%= filter?.gender === 'any' ? 'selected' : '' %>>Any</option>
+      <option value="boys" <%= filter?.gender === 'boys' ? 'selected' : '' %>>Boys</option>
+      <option value="girls" <%= filter?.gender === 'girls' ? 'selected' : '' %>>Girls</option>
+    </select>
+    <input type="text" name="collegeName" placeholder="College Name" value="<%= filter?.collegeName || '' %>" />
+    <input type="text" name="course" placeholder="Course" value="<%= filter?.course || '' %>" />
+    <input type="text" name="year" placeholder="Year" value="<%= filter?.year || '' %>" />
+    <button type="submit" class="btn btn-secondary">Filter</button>
+  </form>
+
+  <!-- PG Cards -->
+  <div class="pg-grid">
+    <% if (pgs && pgs.length > 0) { %>
+      <% pgs.forEach(pg => { %>
+        <div
+          class="card filter-card"
+          data-rent="<%= pg.rent %>"
+          data-gender="<%= pg.genderPreference %>"
+        >
+          <% if (pg.images && pg.images.length > 0) { %>
+            <% const firstImg = pg.images[0]; %>
+            <% const normalized = typeof firstImg === 'string' ? firstImg.replace(/^\/+/, '') : ''; %>
+            <% const src = normalized.includes('/') ? `/${normalized}` : `/images/${normalized}`; %>
+            <img src="<%= src %>" alt="PG Image" />
+          <% } %>
+
+          <div class="card-body">
+            <h4><%= pg.title %></h4>
+            <p><%= [pg.city, pg.area].filter(Boolean).join(', ') || pg.location %></p>
+            <p><strong class="rent-value">₹<%= pg.rent %></strong> / month</p>
+            <p>
+              <% if (pg.facilities && pg.facilities.length > 0) { %>
+                <% pg.facilities.slice(0, 4).forEach(facility => { %>
+                  <span class="facility"><%= facility %></span>
+                <% }) %>
+              <% } else { %>
+                Amenities: N/A
+              <% } %>
+            </p>
+            <p>Total Beds: <strong><%= pg.totalBeds || 1 %></strong></p>
+            <p>Available Beds: <strong><%= pg.availableBeds ?? (pg.availability ? 1 : 0) %></strong></p>
+            <p>Students Living: <strong><%= (pg.approvedStudents && pg.approvedStudents.length) || 0 %></strong></p>
+
+            <p>
+              Room Type:
+              <%= pg.roomType %>
+            </p>
+
+            <p>
+              Availability:
+              <span class="<%= pg.availability ? 'badge-available' : 'badge-unavailable' %>">
+                <%= pg.availability ? 'Available' : 'Full' %>
+              </span>
+            </p>
+
+            <a href="/pg/<%= pg._id %>" class="btn btn-primary">
+              View Details
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="empty-state">No PGs found for selected filters.</div>
+    <% } %>
+  </div>
+</section>
+
+<script src="/js/filters.js"></script>

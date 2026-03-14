@@ -1,0 +1,189 @@
+.roommate-header {
+  margin-bottom: 18px;
+}
+
+.roommate-header h2 {
+  margin-bottom: 6px;
+}
+
+.roommate-header p {
+  color: var(--muted);
+}
+
+.roommate-panel {
+  border: 1px solid var(--border);
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.panel-subtitle {
+  margin: 10px 0 8px;
+}
+
+.request-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.request-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 24px rgba(15,23,42,.06);
+  overflow-x: auto;
+}
+
+.filters input,
+.filters select {
+  flex: 0 0 180px;
+  min-width: 180px;
+  max-width: 180px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  border-radius: 10px;
+}
+
+.filters .btn {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.roommate-create-card .card-body h5 {
+  margin-bottom: 10px;
+}
+
+.roommate-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.roommate-form-grid .form-group {
+  display: grid;
+  gap: 6px;
+}
+
+.roommate-form-grid .form-group label {
+  font-weight: 600;
+  color: var(--text);
+  font-size: .9rem;
+}
+
+.pg-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.roommate-card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.roommate-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.roommate-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  background: #eaf3f5;
+}
+
+.roommate-card .btn {
+  width: fit-content;
+}
+
+.roommate-budget {
+  color: var(--primary);
+}
+
+.roommate-card form input,
+.roommate-card form select {
+  width: 100%;
+}
+
+.compatibility {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.match-high {
+  background: #d7ecef;
+  color: var(--primary);
+}
+
+.match-medium {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.match-low {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+@media (max-width: 1100px) {
+  .roommate-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pg-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .filters {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+
+  .filters input,
+  .filters select,
+  .filters .btn {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .roommate-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pg-grid {
+    grid-template-columns: 1fr;
+  }
+}

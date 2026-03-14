@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Staymate | PG & Roommate Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/navbar.css" />
+  <link rel="stylesheet" href="/css/cards.css" />
+
+  <!-- Page-specific CSS -->
+  <% if (typeof pageCSS !== 'undefined') { %>
+    <link rel="stylesheet" href="/css/<%= pageCSS %>" />
+  <% } %>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container nav-shell">
+      <a href="/" class="navbar-brand" aria-label="StayMate Home">StayMate</a>
+
+      <div class="nav-links" role="navigation" aria-label="Main Navigation">
+        <% if (locals.user) { %>
+          <% if (user.role === 'student') { %>
+            <a class="nav-link <%= currentPath === '/' ? 'is-active' : '' %>" href="/">Home</a>
+            <a class="nav-link <%= currentPath.startsWith('/pg') || currentPath === '/pgs' ? 'is-active' : '' %>" href="/pgs">PG Listings</a>
+            <a class="nav-link <%= currentPath.startsWith('/roommate') ? 'is-active' : '' %>" href="/roommate">Roommate Listings</a>
+            <a class="nav-link <%= currentPath.startsWith('/student/requests') ? 'is-active' : '' %>" href="/student/requests">My Requests</a>
+            <a class="nav-link <%= currentPath.startsWith('/student/profile') ? 'is-active' : '' %>" href="/student/profile">My Profile</a>
+          <% } else if (user.role === 'owner') { %>
+            <a class="nav-link <%= currentPath === '/' ? 'is-active' : '' %>" href="/">Home</a>
+            <a class="nav-link <%= currentPath.startsWith('/owner/my-pgs') ? 'is-active' : '' %>" href="/owner/my-pgs">My PGs</a>
+            <a class="nav-link <%= currentPath.startsWith('/owner/enquiries') ? 'is-active' : '' %>" href="/owner/enquiries">Student Requests</a>
+            <a class="nav-link <%= currentPath.startsWith('/chat') ? 'is-active' : '' %>" href="/chat">Chat</a>
+          <% } %>
+
+          <form action="/auth/logout" method="POST" class="inline-form">
+            <button type="submit" class="btn btn-ghost">Logout</button>
+          </form>
+        <% } else { %>
+          <a class="nav-link <%= currentPath === '/' ? 'is-active' : '' %>" href="/">Home</a>
+          <a class="nav-link <%= currentPath === '/pgs' ? 'is-active' : '' %>" href="/pgs">PG Listings</a>
+          <a class="nav-link <%= currentPath.startsWith('/roommate') ? 'is-active' : '' %>" href="/roommate">Roommate Listings</a>
+          <a class="nav-link <%= currentPath.startsWith('/auth/login') ? 'is-active' : '' %>" href="/auth/login">Login</a>
+          <a href="/auth/register" class="btn btn-primary">Register</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <%- body %>
+  </main>
+
+  <div id="app-toast" class="toast" aria-live="polite">Action completed</div>
+  <div id="app-modal" class="app-modal" aria-hidden="true">
+    <div class="app-modal-panel">
+      <h3>Modal</h3>
+      <p>Use this shell for quick form interactions.</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer mt-5">
+    <div class="container footer-shell">
+      <div class="footer-brand">
+        <p class="footer-title">Staymate</p>
+        <p class="footer-subtitle">Safe, verified, and student-friendly stays for students and young professionals.</p>
+      </div>
+      <div class="footer-grid">
+        <div class="footer-group">
+          <p class="footer-heading">Explore</p>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/pgs">PG Listings</a>
+            <a href="/roommate">Roommate Finder</a>
+          </div>
+        </div>
+        <div class="footer-group">
+          <p class="footer-heading">Account</p>
+          <div class="footer-links">
+            <a href="/auth/login">Login</a>
+            <a href="/auth/register">Register</a>
+            <a href="/student/requests">My Requests</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; <%= new Date().getFullYear() %> Staymate. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="/">Privacy</a>
+        <a href="/">Terms</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<section class="container dashboard-page mt-4">
+  <h2 class="dashboard-title">Dashboard for Student</h2>
+
+  <div class="dashboard-board">
+    <aside class="dash-sidebar">
+      <div class="dash-brand">Student Panel</div>
+      <a class="dash-link is-active" href="/student/dashboard">Dashboard</a>
+      <a class="dash-link" href="/student/profile">Profile</a>
+      <a class="dash-link" href="/student/requests">My Requests</a>
+      <a class="dash-link" href="/pgs">PG Listings</a>
+      <a class="dash-link" href="/roommate">Roommates</a>
+      <a class="dash-link" href="/chat">Chat</a>
+    </aside>
+
+    <div class="dash-main">
+      <div class="hero-panel card-panel">
+        <div>
+          <h3>Hello Student!</h3>
+          <p>Manage your profile, discover PGs, and track your requests from one place.</p>
+        </div>
+        <div class="hero-avatar-wrap">
+          <% if (profile?.profileImage) { %>
+            <img class="hero-avatar" src="<%= profile.profileImage %>" alt="Student avatar" />
+          <% } else if (account?.profileImage) { %>
+            <img class="hero-avatar" src="<%= account.profileImage %>" alt="Student avatar" />
+          <% } else { %>
+            <div class="hero-avatar-fallback"><%= (account?.name || 'S').charAt(0).toUpperCase() %></div>
+          <% } %>
+        </div>
+        <span class="profile-chip <%= profile ? 'ok' : 'pending' %>">
+          Profile: <%= profile ? 'Completed' : 'Incomplete' %>
+        </span>
+      </div>
+
+      <div class="dashboard-stats">
+        <article class="card-panel stat">
+          <h4>Profile Setup</h4>
+          <p>Keep profile updated for better PG and roommate suggestions.</p>
+          <a href="/student/profile" class="btn btn-primary">Update Profile</a>
+        </article>
+
+        <article class="card-panel stat">
+          <h4>Find PG</h4>
+          <p>Browse available PGs and compare rent, amenities, and distance.</p>
+          <a href="/pgs" class="btn btn-secondary">Search PGs</a>
+        </article>
+
+        <article class="card-panel stat">
+          <h4>Roommate Finder</h4>
+          <p>Find compatible students based on your preferences and lifestyle.</p>
+          <a href="/roommate" class="btn btn-secondary">Find Roommates</a>
+        </article>
+
+        <article class="card-panel stat">
+          <h4>Messages</h4>
+          <p>Chat with owners and potential roommates directly from dashboard.</p>
+          <a href="/chat" class="btn btn-secondary">Open Chat</a>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

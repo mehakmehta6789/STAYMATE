@@ -1,0 +1,72 @@
+<% pageCSS = 'owner-dashboard.css' %>
+
+<section class="container owner-page mt-4">
+  <h2 class="dashboard-title">Student Requests</h2>
+
+  <nav class="owner-nav" aria-label="Owner navigation">
+    <a href="/owner/dashboard">Dashboard</a>
+    <a href="/owner/my-pgs">My PGs</a>
+    <a href="/owner/add-pg">Add New PG</a>
+    <a class="is-active" href="/owner/enquiries">Student Requests</a>
+    <a href="/owner/reviews">Reviews</a>
+    <a href="/chat">Chat</a>
+  </nav>
+
+  <% if (!requests || requests.length === 0) { %>
+    <div class="empty-state mt-4">
+      No enquiries yet. Students will appear here once they request to join your PGs.
+    </div>
+  <% } else { %>
+    <div class="table-card mt-4">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>College</th>
+            <th>Budget</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% requests.forEach(r => { %>
+            <tr>
+              <td>
+                <strong><%= r.student.name %></strong>
+                <div style="color:#64748b;"><%= r.pg.title %></div>
+              </td>
+              <td><%= r.studentProfile?.collegeName || 'Not provided' %></td>
+              <td>
+                <% if (r.studentProfile?.budgetMin || r.studentProfile?.budgetMax) { %>
+                  ₹<%= r.studentProfile?.budgetMin || '-' %> - ₹<%= r.studentProfile?.budgetMax || '-' %>
+                <% } else { %>
+                  Not provided
+                <% } %>
+              </td>
+              <td><%= r.student.email %></td>
+              <td>
+                <span class="status-badge <%= r.status === 'approved' ? 'status-approved' : r.status === 'rejected' ? 'status-rejected' : 'status-pending' %>">
+                  <%= r.status %>
+                </span>
+              </td>
+              <td>
+                <div class="action-row">
+                  <form action="/requests/status/<%= r._id %>" method="POST">
+                    <input type="hidden" name="status" value="approved" />
+                    <button class="btn btn-secondary btn-sm">Approve</button>
+                  </form>
+                  <form action="/requests/status/<%= r._id %>" method="POST">
+                    <input type="hidden" name="status" value="rejected" />
+                    <button class="btn btn-danger btn-sm">Reject</button>
+                  </form>
+                  <a href="/chat/with/<%= r.student._id %>" class="btn btn-primary btn-sm">Chat</a>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>

@@ -1,0 +1,260 @@
+<% pageCSS = 'roommate.css' %>
+
+<section class="container mt-4">
+  <div class="roommate-header">
+    <h2>Roommate Finder</h2>
+    <p>Discover compatible roommates, send requests, and manage your post in one place.</p>
+  </div>
+
+  <% if (canCreate) { %>
+    <div class="card mb-4 roommate-panel">
+      <div class="card-body">
+        <div class="panel-head">
+          <h4>Roommate Requests</h4>
+          <a href="/roommate/requests" class="btn btn-outline-primary btn-sm">View All Requests</a>
+        </div>
+
+        <% if (incomingRequests && incomingRequests.length > 0) { %>
+          <p class="panel-subtitle"><strong>Incoming</strong></p>
+          <% incomingRequests.slice(0, 3).forEach(request => { %>
+            <div class="request-row">
+              <span>
+                <strong><%= request.requester?.name || 'Student' %></strong>
+                requested for ₹<%= request.post?.rentShare || '-' %>
+              </span>
+              <div class="request-actions">
+                <form action="/roommate/request/status/<%= request._id %>" method="POST">
+                  <input type="hidden" name="status" value="accepted" />
+                  <button class="btn btn-secondary btn-sm" type="submit">Accept</button>
+                </form>
+                <form action="/roommate/request/status/<%= request._id %>" method="POST">
+                  <input type="hidden" name="status" value="rejected" />
+                  <button class="btn btn-danger btn-sm" type="submit">Reject</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p>No incoming roommate requests.</p>
+        <% } %>
+
+        <% if (outgoingRequests && outgoingRequests.length > 0) { %>
+          <p class="panel-subtitle"><strong>Outgoing</strong></p>
+          <% outgoingRequests.slice(0, 3).forEach(request => { %>
+            <p>
+              To <strong><%= request.recipient?.name || 'Student' %></strong> —
+              <span class="status-badge <%= request.status === 'accepted' ? 'status-approved' : request.status === 'rejected' ? 'status-rejected' : 'status-pending' %>">
+                <%= request.status %>
+              </span>
+            </p>
+          <% }) %>
+        <% } %>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- College/Course/Year Filter -->
+  <form method="get" class="filters mb-4 roommate-filters">
+    <input type="text" name="collegeName" placeholder="College Name" value="<%= filter?.collegeName || '' %>" />
+    <input type="text" name="course" placeholder="Course" value="<%= filter?.course || '' %>" />
+    <input type="text" name="year" placeholder="Year" value="<%= filter?.year || '' %>" />
+    <button type="submit" class="btn btn-secondary">Filter</button>
+  </form>
+
+  <% if (canCreate) { %>
+    <div class="card mb-4 roommate-create-card">
+      <div class="card-body">
+        <h5>Create Roommate Post</h5>
+        <form method="post" action="/roommate/create" enctype="multipart/form-data">
+          <div class="roommate-form-grid">
+            <div class="form-group">
+              <label>Person Image</label>
+              <input type="file" name="personImage" accept="image/*" />
+            </div>
+            <div class="form-group">
+              <label>Post Type</label>
+              <select name="postType" required>
+                <option value="existing_pg">Already Living in PG</option>
+                <option value="new_pg">Looking for New PG Together</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Student Gender</label>
+              <select name="genderPreference">
+                <option value="any">Any</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Budget Share (₹)</label>
+              <input type="number" name="rentShare" required />
+            </div>
+            <div class="form-group">
+              <label>PG Name (if already living)</label>
+              <input type="text" name="pgName" />
+            </div>
+            <div class="form-group">
+              <label>Roommates Needed</label>
+              <input type="number" name="roommatesNeeded" min="1" value="1" />
+            </div>
+            <div class="form-group">
+              <label>Current Rent Split</label>
+              <input type="text" name="currentRentSplitDetails" placeholder="e.g. 2 sharing, 6k each" />
+            </div>
+            <div class="form-group">
+              <label>Preferred Area</label>
+              <input type="text" name="preferredArea" />
+            </div>
+            <div class="form-group">
+              <label>Preferred Location</label>
+              <input type="text" name="preferredLocation" />
+            </div>
+            <div class="form-group">
+              <label>Budget Min</label>
+              <input type="number" name="budgetMin" />
+            </div>
+            <div class="form-group">
+              <label>Budget Max</label>
+              <input type="number" name="budgetMax" />
+            </div>
+            <div class="form-group">
+              <label>Occupation/College</label>
+              <input type="text" name="occupationOrCollege" />
+            </div>
+            <div class="form-group">
+              <label>Lifestyle Preferences</label>
+              <input type="text" name="lifestylePreferences" placeholder="Quiet, Clean, Early sleeper" />
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" name="description" />
+            </div>
+            <div class="form-group">
+              <label>Smoking</label>
+              <select name="habits.smoking">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Drinking</label>
+              <select name="habits.drinking">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Study Friendly</label>
+              <select name="habits.studyFriendly">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tags</label>
+              <input type="text" name="tags" placeholder="non-smoker, early riser" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-secondary mt-2">Add Roommate Post</button>
+        </form>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="pg-grid">
+    <% if (posts && posts.length > 0) { %>
+      <% posts.forEach(post => { %>
+        <div class="card filter-card roommate-card">
+          <% if (post.personImage) { %>
+            <img src="/images/roommate/<%= post.personImage %>" alt="<%= post.user.name %>" />
+          <% } %>
+          <div class="card-body">
+            <span class="badge-type <%= post.postType === 'existing_pg' ? 'badge-type-existing' : 'badge-type-new' %>">
+              <%= post.postType === 'existing_pg' ? 'Already Living in PG' : 'Looking for New PG Together' %>
+            </span>
+            <h4><%= post.user.name %></h4>
+            <% if (post.compatibilityScore) { %>
+              <span class="compatibility <%= post.compatibilityScore >= 75 ? 'match-high' : post.compatibilityScore >= 50 ? 'match-medium' : 'match-low' %>">
+                Match Score: <%= post.compatibilityScore %>%
+              </span>
+            <% } %>
+            <p>Gender: <strong><%= post.genderPreference %></strong></p>
+            <p>Budget: <strong class="roommate-budget">
+              <% if (post.budgetMin || post.budgetMax) { %>
+                ₹<%= post.budgetMin || '-' %> - ₹<%= post.budgetMax || '-' %>
+              <% } else { %>
+                ₹<%= post.rentShare %>
+              <% } %>
+            </strong></p>
+            <p>Preferred Location: <strong><%= post.preferredLocation || post.preferredArea || 'Not specified' %></strong></p>
+            <p>Habits: <strong>
+              <%= post.habits?.smoking ? 'Smoker' : 'Non-smoker' %>,
+              <%= post.habits?.drinking ? 'Drinks' : 'Non-drinker' %>,
+              <%= post.habits?.studyFriendly ? 'Study-friendly' : 'Flexible' %>
+            </strong></p>
+            <p>Occupation/College: <strong><%= post.occupationOrCollege || post.profile?.collegeName || 'Not provided' %></strong></p>
+
+            <% if (post.postType === 'existing_pg') { %>
+              <p>PG Name: <%= post.pgName || 'Not specified' %></p>
+              <p>Looking for <%= post.roommatesNeeded || 1 %> roommate(s)</p>
+              <p>Rent Split: <%= post.currentRentSplitDetails || 'Not specified' %></p>
+            <% } else { %>
+              <p>Preferred Area: <%= post.preferredArea || 'Not specified' %></p>
+              <p>Lifestyle: <%= post.lifestylePreferences || 'Not specified' %></p>
+            <% } %>
+
+            <a href="/chat/with/<%= post.user._id %>" class="btn btn-primary mt-2">
+              Contact
+            </a>
+
+            <% if (post.canSendRequest) { %>
+              <form action="/roommate/request/<%= post._id %>" method="POST" class="mt-2">
+                <input type="text" name="message" placeholder="Optional message" />
+                <button class="btn btn-secondary mt-2" type="submit">Send Request</button>
+              </form>
+            <% } else if (post.requestStatus) { %>
+              <p>
+                Request Status:
+                <span class="status-badge <%= post.requestStatus === 'accepted' ? 'status-approved' : post.requestStatus === 'rejected' ? 'status-rejected' : 'status-pending' %>">
+                  <%= post.requestStatus %>
+                </span>
+              </p>
+            <% } %>
+
+            <% if (post.isOwner) { %>
+              <form action="/roommate/update/<%= post._id %>" method="POST" class="mt-2" enctype="multipart/form-data">
+                <input type="hidden" name="postType" value="<%= post.postType %>" />
+                <input type="hidden" name="pgName" value="<%= post.pgName || '' %>" />
+                <input type="hidden" name="roommatesNeeded" value="<%= post.roommatesNeeded || 1 %>" />
+                <input type="hidden" name="currentRentSplitDetails" value="<%= post.currentRentSplitDetails || '' %>" />
+                <input type="hidden" name="preferredArea" value="<%= post.preferredArea || '' %>" />
+                <input type="hidden" name="lifestylePreferences" value="<%= post.lifestylePreferences || '' %>" />
+                <input type="hidden" name="occupationOrCollege" value="<%= post.occupationOrCollege || '' %>" />
+                <input type="hidden" name="habits.smoking" value="<%= post.habits?.smoking ? 'true' : 'false' %>" />
+                <input type="hidden" name="habits.drinking" value="<%= post.habits?.drinking ? 'true' : 'false' %>" />
+                <input type="hidden" name="habits.studyFriendly" value="<%= post.habits?.studyFriendly ? 'true' : 'false' %>" />
+                <input type="hidden" name="tags" value="<%= (post.tags || []).join(', ') %>" />
+                <input type="file" name="personImage" class="mt-1" accept="image/*" />
+                <input type="number" name="rentShare" value="<%= post.rentShare %>" class="mt-1" placeholder="Budget share" required />
+                <input type="text" name="preferredLocation" value="<%= post.preferredLocation || '' %>" class="mt-1" placeholder="Preferred location" />
+                <input type="number" name="budgetMin" value="<%= post.budgetMin || '' %>" class="mt-1" placeholder="Budget min" />
+                <input type="number" name="budgetMax" value="<%= post.budgetMax || '' %>" class="mt-1" placeholder="Budget max" />
+                <input type="text" name="description" value="<%= post.description || '' %>" class="mt-1" placeholder="Description" />
+                <input type="hidden" name="genderPreference" value="<%= post.genderPreference %>" />
+                <button class="btn btn-secondary mt-2">Edit</button>
+              </form>
+
+              <form action="/roommate/delete/<%= post._id %>" method="POST" class="mt-2" onsubmit="return confirm('Delete this roommate post?')">
+                <button class="btn btn-danger">Delete</button>
+              </form>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="empty-state">No roommate posts available yet.</div>
+    <% } %>
+  </div>
+</section>

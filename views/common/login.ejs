@@ -1,0 +1,51 @@
+
+<% pageCSS = 'login.css' %>
+
+<section class="auth-wrap">
+  <div class="container auth-shell">
+    <aside class="auth-side">
+      <p class="auth-kicker">Welcome Back</p>
+      <h2>Continue your StayMate journey</h2>
+      <p>Login to manage PG requests, connect with owners, and discover your best match.</p>
+    </aside>
+
+    <article class="auth-card">
+      <h1>Login</h1>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <p class="auth-error"><%= error %></p>
+      <% } %>
+
+      <form action="/auth/login" method="POST" class="auth-form">
+        <div class="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="Enter your email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            required
+            placeholder="Enter your password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit">
+          Login
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        Don't have an account?
+        <a href="/auth/register">Register here</a>
+      </p>
+    </article>
+  </div>
+</section>
