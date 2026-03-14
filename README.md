@@ -60,21 +60,33 @@ The platform supports **two main user roles**:
 
 ---
 
-## ⚙️ Installation & Setup
+### 🧭 Installation Steps
 
-### 1. Clone the repository
-
+#### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/staymate.git
-
-**2. Navigate into the project directory**
+git clone https://github.com/mehakmehta6789/ProHealth.git
+cd ProHealth
+```
+### 2.Navigate into the project folder
+```bash
 cd staymate
 
+```
+### 3. Install Dependencies
+```bash
 npm install
+
+```
+
+### 4. Create a .env file
+```bash
 PORT=3000
 MONGO_URI=your_mongodb_connection
 SESSION_SECRET=your_secret_key
-PORT=3000
-MONGO_URI=your_mongodb_connection
-SESSION_SECRET=your_secret_key
-http://localhost:3000
+
+```
+
+### 5. Run the Application
+```bash
+npm start
+```
